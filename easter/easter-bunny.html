@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Easter Bunny</title>
+</head>
+
+<body>
+	
+	<canvas id="canvas" width="800" height="600"></canvas>
+	<br>
+
+	<audio controls autoplay loop>
+	<source src="EasterSong.mp3">
+	</audio>
+	
+	<script>
+	var canvas = document.getElementById("canvas");
+	
+	var ctx = canvas.getContext("2d");
+	
+	var W = 800;
+	var H = 600;
+	
+	var eggs = [];
+	
+	var colours = ["Red", "Cornsilk", "Blue", "Yellow", "Orange", "Purple", "Magenta", "Lime", "Cyan", "BlueViolet"];
+	
+	function circle(x, y, radius, fillCircle)
+	{
+		ctx.beginPath();
+		ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+
+		if (fillCircle)
+		{
+			ctx.fill();
+		}	
+				
+		ctx.stroke();
+	}
+	
+	function oval(x, y, xRadius, yRadius, angle, fillOval)
+	{
+		ctx.beginPath();
+		ctx.ellipse(x, y, xRadius, yRadius, angle, 0, 2 * Math.PI);
+		
+		if (fillOval) {
+			ctx.fill();
+		}
+		
+		ctx.stroke();
+	}
+	
+	function drawBunny(x, y) // bunny
+	{
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "Black";
+		ctx.fillStyle = "#a98b61"; // brown
+		
+		circle(x + 60, y - 15, 15, true); // tail
+		
+		oval(x, y, 65, 50, Math.PI * 2, true); // body
+		
+		oval(x - 30, y - 100, 50, 15, Math.PI / 3, true); // ears
+		oval(x + 30, y - 100, 50, 15, 2 * Math.PI / 3, true);
+		
+		ctx.fillStyle = "#df74bd"; // pink
+		
+		oval(x - 30, y - 100, 30, 10, Math.PI / 3, true); // ears inside
+		oval(x + 30, y - 100, 30, 10, 2 * Math.PI / 3, true);
+		
+		ctx.fillStyle = "#a98b61"; // brown
+		
+		oval(x - 25, y + 40, 20, 15, 2 * Math.PI * 2, true); // feet
+		oval(x + 25, y + 40, 20, 15, 2 * Math.PI * 2, true);
+		
+		circle(x, y - 50, 45, true); // head
+		
+		ctx.fillStyle = "LightBlue";
+		
+		circle(x - 15, y - 55, 15, true); // eyes
+		circle(x + 15, y - 55, 15, true);
+		
+		ctx.fillStyle = "#df74bd"; // pink
+		
+		ctx.beginPath();
+		ctx.moveTo(x - 10, y - 35); // nose
+		ctx.lineTo(x, y - 20);
+		ctx.lineTo(x + 10, y - 35);
+		ctx.lineTo(x - 10, y - 35);
+		ctx.fill();
+		
+		ctx.moveTo(x, y - 20); // mouth
+		ctx.lineTo(x - 7.5, y - 15);
+		ctx.moveTo(x, y - 20);
+		ctx.lineTo(x + 7.5, y - 15);
+		ctx.moveTo(x - 7.5, y - 15);
+		ctx.lineTo(x - 15, y - 20);
+		ctx.moveTo(x + 7.5, y - 15);
+		ctx.lineTo(x + 15, y - 20);
+		ctx.stroke();
+		
+		ctx.fillStyle = "Black";
+		
+		circle(x - 12.5, y - 50, 10, true); // pupils
+		circle(x + 12.5, y - 50, 10, true);
+		
+		ctx.fillStyle = "Red";
+	}
+	
+	function drawEggs() // eggs
+	{
+		for(var i = 0; i < eggs.length; i++)
+		{
+			var egg = eggs[i];
+			
+			ctx.beginPath();
+			ctx.ellipse(egg.eX, egg.eY, 30, 20, egg.eAngle, 0, Math.PI * 2);
+			ctx.fillStyle = egg.eColour;
+			ctx.fill();
+		}
+	}
+	
+	function drawFlower(fX, fY, fColour) // flowers
+	{
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = "LimeGreen";
+		
+		ctx.beginPath(); // stem
+		ctx.moveTo(fX, fY);
+		ctx.lineTo(fX, fY + 50);
+		ctx.stroke();
+		
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "Black";
+		ctx.fillStyle = "LimeGreen";
+		
+		ctx.beginPath(); // Leaf 1
+		ctx.ellipse(fX - 12, fY + 40, 15, 5, Math.PI / 4, 0, Math.PI * 2);
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.beginPath(); // Leaf 2
+		ctx.ellipse(fX + 15, fY + 37, 20, 5, 3 * Math.PI / 4, 0, Math.PI * 2);
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.fillStyle = fColour;
+		
+		ctx.beginPath();
+		ctx.ellipse(fX, fY, 30, 10, Math.PI / 4, 0, Math.PI * 2); // petal 1
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.beginPath();
+		ctx.ellipse(fX, fY, 30, 10, 3 * Math.PI / 4, 0, Math.PI * 2); // petal 2
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.fillStyle = "Yellow";
+		
+		ctx.beginPath(); // seeds
+		ctx.arc(fX, fY, 13, 0, Math.PI * 2, false);
+		ctx.stroke();
+		ctx.fill();
+	}
+	
+	function drawText(text, font, colour, x, y)
+	{
+		ctx.font = font;
+		ctx.fillStyle = colour;
+		ctx.fillText(text, x, y);	
+	}
+		
+	function initialise()
+	{
+		var x = W/2;
+		var y = H/2;
+		
+		ctx.fillStyle = "Green";
+		ctx.fillRect(0, 0, W, H);
+		
+		drawBunny(x, y);
+		drawFlower(200, 200, "Red");
+		drawFlower(600, 300, "Blue");
+		drawFlower(300, 500, "Orange");
+		drawFlower(550, 450, "Pink");
+		drawFlower(550, 150, "Purple");
+		drawText("Click around and see the bunny lay eggs!", "30px Comic Sans MS", "Yellow", 110, 400);
+		
+		eggs = [];
+
+		eggs.push ({
+			eX: x,
+			eY: y,
+			eColour: "Yellow",
+			eAngle: 0
+		});
+		
+		canvas.addEventListener("click", layEgg);
+	}
+		
+	function layEgg(event)
+	{
+		var x = event.pageX;
+		var y = event.pageY;
+		
+		var colourIndex = Math.floor(Math.random() * colours.length);
+		
+		eggs.push ({
+			eX: x,
+			eY: y,
+			eColour: colours[colourIndex],
+			eAngle: Math.random() * Math.PI
+		});
+		
+		ctx.fillStyle = "Green";
+		ctx.fillRect(0, 0, W, H);
+		
+		drawEggs();
+		drawFlower(200, 200, "Red");
+		drawFlower(600, 300, "Blue");
+		drawFlower(300, 500, "Orange");
+		drawFlower(550, 450, "Pink");
+		drawFlower(550, 150, "Purple");
+		drawBunny(x, y);
+		
+		if (eggs.length == 10)
+		{
+			canvas.removeEventListener("click", layEgg);
+			
+			drawText("Happy Easter!", "80px Comic Sans MS", "Yellow", 140, 300);
+			ctx.fillStyle = "Yellow";
+			ctx.fillRect(650, 520, 140, 40);
+			drawText("Play again", "30px Comic Sans MS", "Red", 650, 550);
+			
+			canvas.addEventListener("click", isPlayAgain);			
+		}
+	}
+	
+	function isPlayAgain(event)
+	{
+		if (event.x > 650 && event.x < 790 && event.y > 520 && event.y < 560)
+		{
+			canvas.removeEventListener("click", isPlayAgain);
+			initialise();
+		}
+	
+	}
+	
+	initialise();
+	
+	</script>
+</body>
+</html>

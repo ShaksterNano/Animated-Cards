@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Happy Birthday, Dad!</title>
+</head>
+
+<body>
+
+	<canvas id="canvas" width="800" height="600"></canvas>
+	
+<script>
+window.onload = function(){
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+		
+	function drawText(text, font, colour, x, y) {
+		ctx.font = font;
+		ctx.fillStyle = colour;
+		ctx.fillText(text, x, y);	
+	};
+
+	var circle = function (x, y, radius, fillCircle, colour) {
+		ctx.fillStyle = colour;
+		ctx.beginPath();
+		ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+		if (fillCircle) {
+			ctx.fill();
+		} else {
+			ctx.stroke();
+		}
+	};
+	
+	var Ball = function (x, y, colour, xDirection, yDirection) {
+		this.radius = 30;
+		
+		this.x = x;
+		this.y = y;
+	
+		this.colour = colour;
+	
+		this.xSpeed = xDirection;
+		this.ySpeed = yDirection;
+	};
+		
+	Ball.prototype.draw = function () {
+		circle(this.x, this.y, this.radius, true, this.colour);
+	};
+	
+	Ball.prototype.move = function () {
+		this.x += this.xSpeed;
+		this.y += this.ySpeed;
+	};
+	
+	Ball.prototype.checkCollision = function () {
+		if (this.x < this.radius || this.x > 800 - this.radius) {
+			this.xSpeed = -this.xSpeed;
+		}
+		if (this.y < this.radius || this.y > 600 - this.radius) {
+			this.ySpeed = -this.ySpeed;
+		}
+	};
+
+	var ball1 = new Ball(400, 300, "Red", -5, 10);
+	var ball2 = new Ball(100, 100, "Blue", 10, -5);
+	var ball3 = new Ball(600, 400, "Yellow", 15, 5);
+	var ball4 = new Ball(500, 100, "Green", 3, 9);
+	var ball5 = new Ball(700, 200, "Orange", -10, -3);
+	var ball6 = new Ball(300, 500, "Purple", -5, 5);
+	var ball7 = new Ball(300, 400, "HotPink", -10, 5);
+	var ball8 = new Ball(200, 500, "Cyan", 5, -5);
+
+	setInterval(function () {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "Navy"; //"#2c4585";//"#6b92b9";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+		
+		drawText("Happy Birthday!", "70px Comic Sans MS", "Red", 150, 300);
+//		drawText("Love from Kaikai", "50px Comic Sans MS", "Blue", 180, 500);
+		
+		ball1.draw();
+		ball1.move();
+		ball1.checkCollision();
+		
+		ball2.draw();
+		ball2.move();
+		ball2.checkCollision();
+
+		ball3.draw();
+		ball3.move();
+		ball3.checkCollision();
+		
+		ball4.draw();
+		ball4.move();
+		ball4.checkCollision();
+		
+		ball5.draw();
+		ball5.move();
+		ball5.checkCollision();
+
+		ball6.draw();
+		ball6.move();
+		ball6.checkCollision();
+		
+		ball7.draw();
+		ball7.move();
+		ball7.checkCollision();
+		
+		ball8.draw();
+		ball8.move();
+		ball8.checkCollision();
+
+		ctx.strokeRect(0, 0, 800, 600);
+	}, 30);
+}
+</script>
+</body>
+</html>

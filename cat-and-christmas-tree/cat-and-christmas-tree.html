@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Merry Christmas!</title>
+</head>
+
+<body>
+	
+	<canvas id="canvas" width="800" height="600"></canvas>
+	<br>
+	
+	<audio controls autoplay loop src="SilentNight.mp3">
+	</audio>
+
+	<script>
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	
+	var W = 800;
+	var H = 600;
+    	
+	function circle(x, y, radius, fillCircle)
+	{
+		ctx.beginPath();
+		ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+
+		if (fillCircle)
+		{
+			ctx.fill();
+		}	
+				
+		ctx.stroke();
+	}
+	
+	function oval(x, y, xRadius, yRadius, angle, fillOval)
+	{
+		ctx.beginPath();
+		ctx.ellipse(x, y, xRadius, yRadius, angle, 0, 2 * Math.PI);
+		
+		if (fillOval) {
+			ctx.fill();
+		}
+		
+		ctx.stroke();
+	}
+
+	function drawTree()
+	{
+	    ctx.strokeStyle = "Black";
+	    ctx.fillStyle = "#5f3501";
+	    ctx.fillRect(200, 450, 50, 50); // Trunk
+	    ctx.strokeRect(200, 450, 50, 50);
+
+	    ctx.fillStyle = "DarkGreen";
+	    ctx.beginPath(); // Tree
+	    ctx.moveTo(400, 450);
+	    ctx.lineTo(50, 450);
+	    ctx.lineTo(150, 300);
+	    ctx.lineTo(100, 300);
+	    ctx.lineTo(225, 100);
+	    ctx.lineTo(350, 300);
+	    ctx.lineTo(300, 300);
+	    ctx.lineTo(400, 450);
+	    ctx.fill();
+	    ctx.stroke();
+
+	    ctx.fillStyle = "DarkRed";
+	    ctx.fillRect(100, 440, 75, 75); // Present 1
+	    ctx.strokeRect(100, 440, 75, 75);
+
+	    ctx.fillStyle = "Purple";
+	    ctx.fillRect(270, 460, 80, 60); // Present 2
+	    ctx.strokeRect(270, 460, 80, 60);
+
+	    ctx.fillStyle = "Brown";
+	    ctx.fillRect(150, 490, 90, 80); // Present 3
+	    ctx.strokeRect(150, 490, 90, 80);
+
+	    ctx.strokeStyle = "Gold";
+	    ctx.lineWidth = 10;
+	    ctx.beginPath();
+	    ctx.moveTo(138, 441); // Ribbon 1
+	    ctx.lineTo(138, 514);
+	    ctx.moveTo(100, 478);
+	    ctx.lineTo(175, 478);
+
+	    ctx.moveTo(310, 461); // Ribbon 2
+	    ctx.lineTo(310, 519)
+	    ctx.moveTo(271, 490);
+	    ctx.lineTo(349, 490);
+
+	    ctx.moveTo(195, 491); // Ribbon 3
+	    ctx.lineTo(195, 569);
+	    ctx.moveTo(151, 530);
+	    ctx.lineTo(239, 530);
+	    ctx.stroke();
+	}
+
+	function drawOneLight(x, y, colour)
+	{
+	    ctx.strokeStyle = colour;
+	    ctx.fillStyle = colour;
+	    circle(x, y, 15, true);
+	}
+
+	function drawWithLightSet1(x, y)
+	{
+	    ctx.fillStyle = "MidnightBlue";// "#2c4585";
+	    ctx.fillRect(0, 0, W, H);
+
+	    drawTree();
+
+	    ctx.lineWidth = 1;
+	    drawOneLight(90, 400, "Yellow");
+	    drawOneLight(180, 350, "Blue");
+	    drawOneLight(250, 270, "Red");
+	    drawOneLight(280, 200, "Indigo");
+	    drawOneLight(225, 100, "Gold");
+
+	    ctx.strokeStyle = "Black";
+	    ctx.fillStyle = "#6b92b9";
+	    oval(x + 100, y + 40, 80, 10, 0, true) // cat tail 1
+
+	    drawCat(500, 500);
+
+	    drawText("Merry Christmas!", "50px Comic Sans MS", "Gold", 350, 200);
+	    drawText("With love xxx", "30px Comic Sans MS", "Gold", 400, 300);
+    }
+
+	function drawWithLightSet2(x, y)
+	{
+	    ctx.fillStyle = "MidnightBlue";//"#2c4585";
+	    ctx.fillRect(0, 0, W, H);
+
+	    drawTree();
+
+	    ctx.lineWidth = 1;
+	    drawOneLight(360, 400, "Purple");
+	    drawOneLight(280, 350, "Cyan");
+	    drawOneLight(190, 270, "Chocolate");
+	    drawOneLight(170, 200, "Magenta");
+	    drawOneLight(225, 100, "Yellow");
+
+	    ctx.strokeStyle = "Black";
+	    ctx.fillStyle = "#6b92b9";
+	    oval(x + 95, y, 80, 10, 11 * Math.PI / 6, true) // cat tail 2
+
+	    drawCat(500, 500);
+
+	    drawText("Merry Christmas!", "50px Comic Sans MS", "Gold", 350, 200);
+	    drawText("With love xxx", "30px Comic Sans MS", "Gold", 400, 300);
+    }
+	
+	function drawCat(x, y) // cat
+	{
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "Black";
+		ctx.fillStyle = "#6b92b9";
+		
+		oval(x, y, 65, 50, Math.PI * 2, true); // body
+		
+		ctx.beginPath();
+		ctx.moveTo(x - 30, y - 80);
+		ctx.lineTo(x - 30, y - 110);
+		ctx.lineTo(x, y - 90);
+		ctx.moveTo(x + 30, y - 80);
+		ctx.lineTo(x + 30, y - 110);
+		ctx.lineTo(x, y - 90);
+		ctx.fill();
+		ctx.stroke();
+		
+		oval(x - 25, y + 40, 20, 10, 2 * Math.PI * 2, true); // feet
+		oval(x + 25, y + 40, 20, 10, 2 * Math.PI * 2, true);
+
+		ctx.beginPath();
+		ctx.moveTo(x - 35, y + 40);
+		ctx.lineTo(x - 35, y + 50);
+		ctx.moveTo(x - 25, y + 40);
+		ctx.lineTo(x - 25, y + 50);
+		ctx.moveTo(x - 15, y + 40);
+		ctx.lineTo(x - 15, y + 50);
+
+		ctx.moveTo(x + 35, y + 40);
+		ctx.lineTo(x + 35, y + 50);
+		ctx.moveTo(x + 25, y + 40);
+		ctx.lineTo(x + 25, y + 50);
+		ctx.moveTo(x + 15, y + 40);
+		ctx.lineTo(x + 15, y + 50);
+		ctx.stroke();
+		
+		circle(x, y - 50, 45, true); // head
+		
+		ctx.fillStyle = "Orange";
+		
+		circle(x - 15, y - 55, 15, true); // eyes
+		circle(x + 15, y - 55, 15, true);
+				
+		ctx.beginPath();
+		ctx.moveTo(x - 5, y - 30); // nose
+		ctx.lineTo(x, y - 20);
+		ctx.lineTo(x + 5, y - 30);
+		ctx.lineTo(x - 5, y - 30);
+		
+		ctx.moveTo(x, y - 20); // mouth
+		ctx.lineTo(x - 7.5, y - 15);
+		ctx.moveTo(x, y - 20);
+		ctx.lineTo(x + 7.5, y - 15);
+		ctx.moveTo(x - 7.5, y - 15);
+		ctx.lineTo(x - 15, y - 20);
+		ctx.moveTo(x + 7.5, y - 15);
+		ctx.lineTo(x + 15, y - 20);
+
+		ctx.moveTo(x - 20, y - 30); // whiskers
+		ctx.lineTo(x - 60, y - 40);
+		ctx.moveTo(x + 20, y - 30);
+		ctx.lineTo(x + 60, y - 40);
+		ctx.moveTo(x - 20, y - 20);
+		ctx.lineTo(x - 60, y - 15);
+		ctx.moveTo(x + 20, y - 20);
+		ctx.lineTo(x + 60, y - 15);
+		ctx.stroke();
+		
+		ctx.fillStyle = "Black";
+		
+		circle(x - 12.5, y - 50, 10, true); // pupils
+		circle(x + 12.5, y - 50, 10, true);
+	}
+
+	function drawText(text, font, colour, x, y)
+	{
+		ctx.font = font;
+		ctx.fillStyle = colour;
+		ctx.fillText(text, x, y);	
+	};
+	
+	drawWithLightSet1(500, 500);
+
+	setTimeout(function ()
+	{ drawWithLightSet2(500, 500); }, 1000);
+
+	setInterval(function () {
+	    drawWithLightSet1(500, 500);
+	    setTimeout(function ()
+	    { drawWithLightSet2(500, 500); }, 1000);
+	}, 2000);
+
+	</script>
+</body>
+</html>

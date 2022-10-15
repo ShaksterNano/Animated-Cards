@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Let it snow</title>
+<style>
+/*Simple reset*/
+* {margin: 10; padding: 0;}
+
+/*
+body {
+	background: #6b92b9;
+}*/
+
+canvas {
+	display: block;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<br>
+
+<audio controls loop>
+<source src="Movie-star-piano-and-strings.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+	//canvas init
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	
+	//canvas dimensions
+	var W = 800;//window.innerWidth;
+	var H = 600;//window.innerHeight;
+	canvas.width = W;
+	canvas.height = H;
+	
+	//snowflake particles
+	var mp = 100; //max particles
+	var particles = [];
+	for(var i = 0; i < mp; i++)
+	{
+		particles.push({
+			x: Math.random()*W, //x-coordinate
+			y: Math.random()*H, //y-coordinate
+			r: Math.random()*4+1, //radius
+			d: Math.random()*mp //density
+		})
+	}
+	
+	//Function to move the snowflakes
+	//angle will be an ongoing incremental flag. Sin and Cos functions will be applied to it to create vertical and horizontal movements of the flakes
+	var angle = 0;
+	function update()
+	{
+		angle += 0.01;
+		for(var i = 0; i < mp; i++)
+		{
+			var p = particles[i];
+			//Updating X and Y coordinates
+			//We will add 1 to the cos function to prevent negative values which will lead flakes to move upwards
+			//Every particle has its own density which can be used to make the downward movement different for each flake
+			//Lets make it more random by adding in the radius
+			p.y += Math.cos(angle+p.d) + 1 + p.r/2;
+			p.x += Math.sin(angle) * 2;
+			
+			//Sending flakes back from the top when it exits
+			//Lets make it a bit more organic and let flakes enter from the left and right also.
+			if(p.x > W+5 || p.x < -5 || p.y > H)
+			{
+				if(i%3 > 0) //66.67% of the flakes
+				{
+					particles[i] = {x: Math.random()*W, y: -10, r: p.r, d: p.d};
+				}
+				else
+				{
+					//If the flake is exitting from the right
+					if(Math.sin(angle) > 0)
+					{
+						//Enter from the left
+						particles[i] = {x: -5, y: Math.random()*H, r: p.r, d: p.d};
+					}
+					else
+					{
+						//Enter from the right
+						particles[i] = {x: W+5, y: Math.random()*H, r: p.r, d: p.d};
+					}
+				}
+			}
+		}
+	}//end of update()
+
+	function drawSnow()
+	{
+		ctx.fillStyle = "Navy"; //"#2c4585";//"#6b92b9";
+		ctx.fillRect(0, 0, W, H);
+		
+		//Draw the flakes
+		ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+		ctx.beginPath();
+		for(var i = 0; i < mp; i++)
+		{
+			var p = particles[i];
+			ctx.moveTo(p.x, p.y);
+			ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+		}
+		ctx.fill();
+		
+		update();
+	}
+	
+	function drawSnowmanBody()
+	{
+		ctx.beginPath();
+		ctx.arc(200, 540, 60, 0, Math.PI*2, true);
+		ctx.fillStyle = "White";
+		ctx.fill();
+
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+		ctx.stroke();
+
+	}
+
+	function drawSnowmanHead()
+	{
+		ctx.beginPath();
+		ctx.arc(200, 440, 40, 0, Math.PI*2, true);
+		ctx.fillStyle = "White";
+		ctx.fill();
+
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+		ctx.stroke();
+
+	}
+	
+	function drawSnowmanHat()
+	{
+		ctx.beginPath();
+
+		ctx.fillStyle = "Black";
+		ctx.fillRect(180, 360, 40, 40);
+		
+		ctx.fillStyle = "Red";
+		ctx.fillRect(180, 390, 40, 10);
+		
+		ctx.lineWidth = 5;
+		ctx.moveTo(160, 400);
+		ctx.lineTo(240, 400);
+		ctx.strokeStyle = "Black";
+		ctx.stroke();
+	}
+		
+	function drawSnowmanFace()
+	{
+		//Eyes
+		ctx.fillStyle = "Black";
+
+		ctx.beginPath();
+		ctx.arc(180, 430, 5, 0, Math.PI*2, true);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.arc(220, 430, 5, 0, Math.PI*2, true);
+		ctx.fill();
+		
+		//Nose
+		ctx.fillStyle = "Orange";
+		ctx.beginPath();
+		ctx.arc(200, 440, 10, 0, Math.PI*2, true);
+		ctx.fill();
+		
+		//Mouth
+		ctx.lineWidth = 3;
+		ctx.strokeStyle = "Black";
+		ctx.beginPath();
+		ctx.arc(200, 440, 25, Math.PI/4, Math.PI*3/4, false);
+		ctx.stroke();				
+	}
+	
+	function drawSnowmanButtons()
+	{
+		ctx.fillStyle = "Black";
+		
+		ctx.beginPath();
+		ctx.arc(200, 510, 5, 0, Math.PI*2, true);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.arc(200, 540, 5, 0, Math.PI*2, true);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.arc(200, 570, 5, 0, Math.PI*2, true);
+		ctx.fill();
+	
+	}
+	
+	function drawSnowmanArms()
+	{
+		ctx.strokeStyle = "Black";
+		ctx.lineWidth = 3;
+	
+		//arms
+		ctx.beginPath();
+		ctx.moveTo(150, 520);
+		ctx.lineTo(90, 500);
+		ctx.moveTo(250, 520);
+		ctx.lineTo(310, 500);
+		ctx.stroke();
+		
+		//fingers
+		ctx.beginPath();
+		ctx.moveTo(90, 500);
+		ctx.lineTo(80, 490);
+		ctx.moveTo(90, 500);
+		ctx.lineTo(80, 500);
+		ctx.moveTo(90, 500);
+		ctx.lineTo(80, 510);
+		
+		ctx.moveTo(310, 500);
+		ctx.lineTo(320, 490);
+		ctx.moveTo(310, 500);
+		ctx.lineTo(320, 500);
+		ctx.moveTo(310, 500);
+		ctx.lineTo(320, 510);
+		ctx.stroke();
+	}
+
+	function drawText(text, font, colour, x, y)
+	{
+		ctx.font = font;
+		ctx.fillStyle = colour;
+		ctx.fillText(text, x, y);	
+	};
+	
+	//The animation 
+	var interval1, interval2, interval3, interval4, interval5, interval6, interval7;
+	var delay = 1500;
+	
+	interval1 = setInterval(drawSnow, 30);
+	
+	setTimeout(function () {
+		clearInterval(interval1);
+		interval2 = setInterval(function () {drawSnow(); drawSnowmanBody();}, 30);
+		}, delay);
+
+	setTimeout(function () {
+		clearInterval(interval2);
+		interval3 = setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead();}, 30);
+		}, delay*2);
+
+	setTimeout(function () {
+		clearInterval(interval3);
+		interval4 = setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead(); drawSnowmanHat();}, 30);
+		}, delay*3);
+
+	setTimeout(function () {
+		clearInterval(interval4);
+		interval5 = setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead(); drawSnowmanHat(); drawSnowmanFace();}, 30);
+		}, delay*4);
+
+	setTimeout(function () {
+		clearInterval(interval5);
+		interval6 = setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead(); drawSnowmanHat(); drawSnowmanFace(); drawSnowmanButtons();}, 30);
+		}, delay*5);
+
+	setTimeout(function () {
+		clearInterval(interval6);
+		interval7 = setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead(); drawSnowmanHat(); drawSnowmanFace(); drawSnowmanButtons(); drawSnowmanArms();}, 30);
+		}, delay*6);
+
+	setTimeout(function () {
+		clearInterval(interval7);
+		setInterval(function () {drawSnow(); drawSnowmanBody(); drawSnowmanHead(); drawSnowmanHat(); drawSnowmanFace(); drawSnowmanButtons(); drawSnowmanArms();
+			drawText("Merry Christmas!", "70px Comic Sans MS", "Red", 120, 200);
+			drawText("With love xxx", "30px Comic Sans MS", "Red", 400, 500);
+			}, 30);
+		}, delay*7);
+	
+</script>
+
+</body>
+</html>
