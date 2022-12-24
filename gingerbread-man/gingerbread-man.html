@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Merry Christmas!</title>
+</head>
+
+<body>
+
+<canvas id="canvas" width="800" height="600"></canvas>
+<br>
+
+<a id="link"></a>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const W = 800;
+    const H = 600;
+
+    function circle(x, y, radius, fillCircle) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+
+        if (fillCircle) {
+            ctx.fill();
+        }
+
+        ctx.stroke();
+    }
+
+    function oval(x, y, xRadius, yRadius, angle, fillOval) {
+        ctx.beginPath();
+        ctx.ellipse(x, y, xRadius, yRadius, angle, 0, 2 * Math.PI);
+
+        if (fillOval) {
+            ctx.fill();
+        }
+
+        ctx.stroke();
+    }
+
+    function rectangle(x, y, width, height, angle, fill) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.rect(-width / 2, -height / 2, width, height);
+
+        if (fill) {
+            ctx.fill();
+        }
+
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawLeg(x, y, width, height, angle, fill) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.rect(-width / 2, -height / 2, width, height);
+
+        if (fill) {
+            ctx.fill();
+        }
+
+        ctx.stroke();
+        circle(width / 2, 0, height / 2, fill);
+
+        // Leg bands
+        if (fill) {
+            ctx.strokeWidth = 3;
+            ctx.fillStyle = "White";
+            ctx.strokeStyle = "White";
+            ctx.beginPath();
+            ctx.rect(width / 3, -height / 2, width / 8, height);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.strokeStyle = "Black";
+            ctx.moveTo(width / 3, -height / 1.6);
+            ctx.lineTo(width / 3, height / 1.6);
+            ctx.moveTo(width / 3 + width / 8, -height / 1.6);
+            ctx.lineTo(width / 3 + width / 8, height / 1.6);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    function drawGingerbreadMan(x, y, scale) {
+        ctx.lineWidth = 3 * scale;
+        ctx.strokeStyle = "Black";
+        const fillColor = "#BB6915";
+        ctx.fillStyle = fillColor;
+
+        // Arms
+        const armsLength = 120 * scale;
+        const armsWidth = 40 * scale;
+        const halfArmsLength = armsLength / 2;
+        const halfArmsWidth = armsWidth / 2;
+        rectangle(x, y, armsLength, armsWidth, 0, false);
+
+        circle(x - halfArmsLength, y, halfArmsWidth, false);
+        circle(x + halfArmsLength, y, halfArmsWidth, false);
+
+        // Head
+        const headRadius = 35 * scale;
+        const headY = y - headRadius - armsWidth / 4;
+        circle(x, headY, headRadius, false);
+
+        // Legs
+        const legWidth = 40 * scale;
+        const legLength = 80 * scale;
+        const halfLegWidth = legWidth / 2;
+        const halfLegLength = legLength / 2;
+        const legAngle = 2;
+        drawLeg(x - halfLegWidth, y + halfLegLength, legLength, legWidth, legAngle, false);
+        drawLeg(x + halfLegWidth, y + halfLegLength, legLength, legWidth, Math.PI - legAngle, false);
+
+        ctx.strokeStyle = fillColor;
+
+        // Arms fill
+        rectangle(x, y, armsLength - ctx.lineWidth * 2, armsWidth - ctx.lineWidth * 2, 0, true);
+        circle(x - halfArmsLength, y, halfArmsWidth - ctx.lineWidth, true);
+        circle(x + halfArmsLength, y, halfArmsWidth - ctx.lineWidth, true);
+
+        // Head fill
+        circle(x, headY, headRadius - ctx.lineWidth, true);
+
+        // Legs fill
+        drawLeg(x - halfLegWidth, y + halfLegLength, legLength, legWidth - ctx.lineWidth * 2, legAngle, true);
+        drawLeg(x + halfLegWidth, y + halfLegLength, legLength, legWidth - ctx.lineWidth * 2, Math.PI - legAngle, true);
+
+        // Eyes
+        ctx.fillStyle = "Black";
+        ctx.strokeStyle = "Black";
+        circle(x - 10 * scale, headY - 10 * scale, 4 * scale, true);
+        circle(x + 10 * scale, headY - 10 * scale, 4 * scale, true);
+
+        // Arm bands
+        ctx.fillStyle = "White";
+        ctx.strokeStyle = "Black";
+        rectangle(x - halfArmsLength * 0.9, y, armsWidth / 4, armsWidth, 0, true);
+        rectangle(x + halfArmsLength * 0.9, y, armsWidth / 4, armsWidth, 0, true);
+
+        // Mouth
+        ctx.strokeStyle = "White";
+        ctx.lineWidth = 2 * scale;
+        ctx.beginPath();
+        ctx.arc(x, headY + 5 * scale, 10 * scale, 0, Math.PI, false);
+        ctx.stroke();
+
+        // Buttons
+        ctx.fillStyle = "White";
+        circle(x, y - armsWidth / 5, 4 * scale, true);
+        circle(x, y + armsWidth / 5, 4 * scale, true);
+        circle(x, y + armsWidth / 5 * 3, 4 * scale, true);
+    }
+
+    function drawCandyCane(x, y, scale) {
+        ctx.lineWidth = 3 * scale;
+        ctx.strokeStyle = "Black";
+        const fillColor = "White";
+        ctx.fillStyle = fillColor;
+
+        const rectangleWidth = 20 * scale;
+        const rectangleHeight = 100 * scale;
+        const halfRectangleWidth = rectangleWidth / 2;
+        const halfRectangleHeight = rectangleHeight / 2;
+
+        const outerRadius = 40 * scale;
+        circle(x, y + halfRectangleHeight, halfRectangleWidth, true);
+        circle(x + outerRadius + rectangleWidth, y - halfRectangleHeight, halfRectangleWidth, true);
+        rectangle(x, y, rectangleWidth, rectangleHeight, 0, true);
+        ctx.beginPath();
+        ctx.arc(x + outerRadius - halfRectangleWidth, y - halfRectangleHeight, outerRadius, Math.PI, 0, false);
+        const innerRadius = outerRadius - rectangleWidth;
+        ctx.arc(x + innerRadius + halfRectangleWidth, y - halfRectangleHeight, innerRadius, 0, Math.PI, true);
+        ctx.lineTo(x - halfRectangleWidth, y - halfRectangleHeight);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = fillColor;
+        rectangle(x, y - halfRectangleHeight, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 1, 0, false);
+        rectangle(x + outerRadius + rectangleWidth, y - halfRectangleHeight, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 1, 0, false);
+        rectangle(x, y + halfRectangleHeight, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 1, 0, false);
+
+        ctx.strokeStyle = "Red";
+        ctx.fillStyle = "Red";
+
+        rectangle(x + outerRadius + rectangleWidth, y - halfRectangleHeight, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 10, 0, true);
+        for (let i = 0; i < 4; i++) {
+            rectangle(x, y - halfRectangleHeight + i * 30 * scale, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 10, 0, true);
+        }
+        rectangle(x + outerRadius - halfRectangleWidth, y - halfRectangleHeight - outerRadius + halfRectangleWidth, 10, (rectangleWidth - ctx.lineWidth / 2) * 0.75, 0, true);
+    }
+
+    function drawText(text, font, colour, x, y) {
+        ctx.font = font;
+        ctx.fillStyle = colour;
+        ctx.fillText(text, x, y);
+    }
+
+    ctx.fillStyle = "#015910";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "Black";
+    ctx.fillStyle = "#6b92b9";
+
+    drawGingerbreadMan(200, 300, 2);
+    drawCandyCane(300, 350, 2);
+
+    drawText("Merry Christmas", "30px Comic Sans MS", "Gold", 500, 150);
+    drawText("and", "30px Comic Sans MS", "Gold", 590, 200);
+    drawText("Happy New Year!", "30px Comic Sans MS", "Gold", 500, 250);
+
+    const link = document.getElementById("link");
+    link.setAttribute("download", "card.png");
+    link.setAttribute("href", canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+    link.click();
+</script>
+</body>
+</html>
